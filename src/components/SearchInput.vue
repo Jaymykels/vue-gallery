@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-gray-300 lg:h-64 h-32">
+  <div class="bg-gray-300 lg:h-64 h-32 lg:-mb-12 -mb-6">
     <div class="lg:py-24 lg:px-24 px-8 py-8">
       <!-- Search Description -->
       <div v-if="isSearch" class="flex justify-between">

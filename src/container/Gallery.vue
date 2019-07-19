@@ -1,14 +1,26 @@
 <template>
   <div class="content-center lg:my-12 my-4 mx-auto lg:px-12 px-4">
-    <SearchInput v-on:search="search($event)" v-on:reset="load()" />
+    <!-- Search Component -->
+    <SearchInput v-on:search="search($event)" v-on:reset="load()" :loading="loading" />
+    <!-- Image Columns -->
+    <div class="mx-auto z-10 w-3/4 grid">
+      <!-- Image Card Component -->
+      <ImageCard
+        v-for="(item, index) in items || Array(8).fill({})"
+        :key="index"
+        :data="item"
+      />
+    </div>
   </div>
 </template>
 
 <script>
 import SearchInput from "../components/SearchInput";
+import ImageCard from "../components/ImageCard";
 export default {
   components: {
-    SearchInput
+    SearchInput,
+    ImageCard
   },
   methods: {
     search(value) {
@@ -17,6 +29,20 @@ export default {
     load() {
       console.log("load");
     }
+  },
+  data() {
+    return {
+      items: null,
+      loading: false
+    };
   }
 };
 </script>
+
+<style>
+@media (min-width: 992px) {
+  .grid {
+    column-count: 3;
+  }
+}
+</style>

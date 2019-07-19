@@ -9,6 +9,7 @@
         v-for="(item, index) in items || Array(8).fill({})"
         :key="index"
         :data="item"
+        :loading="loading"
       />
     </div>
   </div>
@@ -17,6 +18,7 @@
 <script>
 import SearchInput from "../components/SearchInput";
 import ImageCard from "../components/ImageCard";
+import { setTimeout } from 'timers';
 export default {
   components: {
     SearchInput,
@@ -27,7 +29,10 @@ export default {
       console.log(value);
     },
     load() {
-      console.log("load");
+      this.loading = true
+      setTimeout(() => {
+        this.loading = false
+      }, 3000);
     }
   },
   data() {
@@ -35,7 +40,10 @@ export default {
       items: null,
       loading: false
     };
-  }
+  },
+  mounted() {
+    this.load()
+  },
 };
 </script>
 

@@ -6,13 +6,14 @@
     <div class="mx-auto z-10 w-3/4 grid">
       <!-- Image Card Component -->
       <ImageCard
-        v-for="(item, index) in items || Array(8).fill({})"
+        v-for="(item, index) in items || Array(6).fill({})"
         :key="index"
         :data="item"
         :loading="loading"
         @click.native="view(item)"
       />
     </div>
+    <!-- Modal -->
     <div
       v-if="modal"
       @click.self="modal = false"
@@ -31,6 +32,7 @@
           />
         </svg>
       </span>
+      <!-- Image Viewer -->
       <Preview :image="item" />
     </div>
   </div>
@@ -40,7 +42,9 @@
 import SearchInput from "../components/SearchInput";
 import ImageCard from "../components/ImageCard";
 import Preview from "../components/Preview";
-import { setTimeout } from "timers";
+import axios from "axios";
+const ACCESS_KEY =
+  "a17353f670b92d2b48b4d012ae4ccf46c8265131fbf8d4f637d04abfbca132c2";
 export default {
   components: {
     SearchInput,
@@ -49,13 +53,30 @@ export default {
   },
   methods: {
     search(value) {
-      console.log(value);
+      this.loading = true;
+      axios
+        .get(
+          `https://api.unsplash.com/search/photos?client_id=${ACCESS_KEY}&query=${
+            value
+          }`
+        )
+        .then(res => {
+          this.items = res.data.results;
+          this.loading = false;
+        })
+        .catch(() => alert("Oops! Something happened connecting to server."));
     },
     load() {
       this.loading = true;
-      setTimeout(() => {
-        this.loading = false;
-      }, 3000);
+      axios
+        .get(
+          `https://api.unsplash.com/search/photos?client_id=${ACCESS_KEY}&query=african`
+        )
+        .then(res => {
+          this.items = res.data.results.slice(0, 8);
+          this.loading = false;
+        })
+        .catch(() => alert("Oops! Something happened connecting to server."));
     },
     view(item) {
       (this.modal = true), (this.item = item);
@@ -64,13 +85,15 @@ export default {
   data() {
     return {
       items: null,
-      loading: false,
+      loading: true,
       modal: false,
       item: {}
     };
   },
   mounted() {
-    this.load();
+    setTimeout(() => {
+      this.load();
+    }, 3000);
   }
 };
 </script>
